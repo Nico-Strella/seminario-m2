@@ -36,7 +36,6 @@ class CustomerCredit
      */
     protected $customerSession;
 
-
     public function __construct(
         \Magento\Customer\Model\Session $customerSession,
         \Magento\Framework\Model\Context $context,
@@ -66,6 +65,9 @@ class CustomerCredit
         if($isAvailable){
             //Tomo el valor de si tiene habilitado el credito o no para saber si lo muestro
             $isAvailable = (bool) $this->customerSession->getCustomer()->getData('enable_customer_credit');
+            $totalCartPrice = $quote->getGrandTotal();
+            $limitPrice = $this->_scopeConfig->getValue('payment/customer_credit/limite_maximo');
+            $isAvailable = (bool) ($totalCartPrice < $limitPrice) ? true : false;
         }
 
         return $isAvailable;
